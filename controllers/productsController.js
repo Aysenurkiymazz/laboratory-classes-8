@@ -67,3 +67,19 @@ exports.deleteProduct = async (request, response) => {
 
   response.status(STATUS_CODE.OK).json({ success: true });
 };
+
+exports.addProduct = async (request, response) => {
+  const productData = {
+    name: request.body.name,
+    description: request.body.description,
+    price: parseFloat(request.body.price) // 🟢 Buraya dikkat!
+  };
+
+  try {
+    await Product.add(productData);
+    response.redirect("/products/new");
+  } catch (error) {
+    console.error("Ürün eklenirken hata oluştu:", error);
+    response.status(STATUS_CODE.INTERNAL_SERVER_ERROR).send("Ürün eklenemedi.");
+  }
+};

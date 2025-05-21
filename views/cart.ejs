@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= headTitle %></title>
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <main>
+      <%- include('partials/navigation', {
+        menuLinks,
+        activeLinkPath,
+        cartCount
+      }); %>
+
+      <h1 class="heading">Your Cart</h1>
+
+      <% if (cartItems && cartItems.length > 0) { %>
+        <div class="cart__list">
+          <% cartItems.forEach(item => { %>
+            <div class="card">
+              <img
+                class="card__image"
+                src="https://source.unsplash.com/random/400x200?product=<%= item.product.name %>"
+                alt="<%= item.product.name %>"
+              />
+              <h3 class="card__title"><%= item.product.name %></h3>
+              <p class="card__description"><%= item.product.description %></p>
+              <p class="card__price">
+                <strong>Price:</strong> $<%= item.product.price.toFixed(2) %> × <%= item.quantity %> =
+                $<%= (item.product.price * item.quantity).toFixed(2) %>
+              </p>
+            </div>
+          <% }) %>
+        </div>
+
+        <div style="font-size: 1.2rem; margin-top: 2rem;">
+          <strong>Total:</strong> $<%= totalPrice.toFixed(2) %>
+        </div>
+      <% } else { %>
+        <p>Your cart is empty.</p>
+      <% } %>
+    </main>
+  </body>
+</html>

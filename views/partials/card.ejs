@@ -1,20 +1,38 @@
 <div class="card">
   <img
     class="card__image"
-    src="https://source.unsplash.com/random/400x200?product1"
-    alt="Produkt 1"
+    src="https://source.unsplash.com/random/400x200?product=<%= product.name %>"
+    alt="<%= product.name %>"
   />
+
   <h3 class="card__title"><%= product.name %></h3>
   <p class="card__description"><%= product.description %></p>
-  <p class="card__price"><%= product.price %></p>
-  <a href="/products/<%= product.name %>">Details</a>
-  <button onclick="deleteProduct('<%= product.name %>')">Delete</button>
+  <p class="card__price">
+    $<%= typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price).toFixed(2) %>
+  </p>
+
+  <a class="card__link" href="/products/<%= product.name %>">Details</a>
+
+  <div style="margin-top: 1rem;">
+    <button
+      class="product__button product__button--add"
+      onclick="addToCart('<%= product.name %>')"
+    >
+      Add to Cart
+    </button>
+
+    <button
+      class="product__button product__button--delete"
+      onclick="deleteProduct('<%= product.name %>')"
+    >
+      Delete
+    </button>
+  </div>
 </div>
+
 <script>
   function deleteProduct(name) {
-    if (!confirm(`Are you sure you want to remove ${name}?`)) {
-      return;
-    }
+    if (!confirm(`Are you sure you want to remove ${name}?`)) return;
 
     fetch(`/products/${name}`, {
       method: "DELETE",
@@ -23,6 +41,22 @@
         window.location.reload();
       } else {
         alert("Error while removing product.");
+      }
+    });
+  }
+
+  function addToCart(productName) {
+    fetch("/cart/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ productName }),
+    }).then((res) => {
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        alert("Error adding to cart.");
       }
     });
   }

@@ -1,17 +1,17 @@
-const { DB_USER, DB_PASS } = require("./config");
+const { DB_URL } = require("./config");
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
 
 let database;
 
 const mongoConnect = (callback) => {
-  MongoClient.connect(`mongodb+srv://${DB_USER}:${DB_PASS}@`)
+  MongoClient.connect(DB_URL)
     .then((client) => {
-      console.log("Connected!");
+      console.log("Connected to MongoDB!");
       database = client.db("shop");
       callback();
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.log("Database connection error:", error));
 };
 
 const getDatabase = () => {
@@ -23,3 +23,4 @@ const getDatabase = () => {
 };
 
 module.exports = { mongoConnect, getDatabase };
+
